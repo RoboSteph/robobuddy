@@ -2,6 +2,7 @@
 #Following RealPython tutorial
 #Stephanie Simpler
 #6-1-2020
+#Note: Dont forget to add back in responding to name 
 
 import os
 import discord
@@ -16,15 +17,36 @@ GUILD = os.getenv('DISCORD_GUILD')
 
 #converting our bot.py to use a bot instead of client
 bot = commands.Bot(command_prefix='!')
+# guild = discord.utils.get(bot.guilds, name=GUILD)
 
 @bot.event
 async def on_ready():
     guild = discord.utils.get(bot.guilds, name=GUILD)
-
     print(
         f'{bot.user.name} has connected to Discord!\n'
         f'{guild.name}(id: {guild.id})'
         )
+
+@bot.command(name='channels', help='Lists all channels in this server')
+#"any command function must accept at least one parameter called ctx.. context.. holds data such as channel and guild the user called the command from"-RealPython
+async def list_channels(ctx):
+    response = "placeholder"
+    await ctx.send(response)
+
+@bot.command(name='emojis', help='Shows all emojis for our server')
+async def show_emojis(ctx):
+    print("showing emojis...")
+    guild = discord.utils.get(bot.guilds, name=GUILD)
+
+    emoji_info = []
+    for e in guild.emojis:
+        emoji_info.append('<:' + e.name + ':' + str(e.id) + '>')
+
+    emoji_info_joined = ' '.join(emoji_info)
+
+    print(emoji_info_joined)
+    response = emoji_info_joined
+    await ctx.send(response)
 
 # @client.event
 # #event handler
