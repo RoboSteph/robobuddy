@@ -3,6 +3,7 @@
 #Stephanie Simpler
 #6-1-2020
 #Note: Dont forget to add back in responding to name 
+#Tried banner but it is 'emtpy' can't find setting for it in Discord
 
 import os
 import discord
@@ -19,6 +20,7 @@ GUILD = os.getenv('DISCORD_GUILD')
 bot = commands.Bot(command_prefix='!')
 # guild = discord.utils.get(bot.guilds, name=GUILD)
 
+
 @bot.event
 async def on_ready():
     guild = discord.utils.get(bot.guilds, name=GUILD)
@@ -30,7 +32,24 @@ async def on_ready():
 @bot.command(name='channels', help='Lists all channels in this server')
 #"any command function must accept at least one parameter called ctx.. context.. holds data such as channel and guild the user called the command from"-RealPython
 async def list_channels(ctx):
-    response = "placeholder"
+    guild = discord.utils.get(bot.guilds, name=GUILD)
+    
+    guild_channels = guild.channels
+    list_of_channel_ids = []
+
+    #I would like to find a better way to do this that also prints the category names 
+    #voice channel is not a link but all text channels are
+    for n in guild_channels:
+        print(f'{n.name} {n.type}, ')
+        if str(n.type) == 'text' or str(n.type) == 'voice':
+            list_of_channel_ids.append('<#' + str(n.id) + '>')
+
+    list_of_channel_ids = ' \n'.join(list_of_channel_ids)
+
+
+    response = 'Here are links to all of our channels: \n' + list_of_channel_ids
+    print(list_of_channel_ids)
+
     await ctx.send(response)
 
 @bot.command(name='emojis', help='Shows all emojis for our server')
@@ -47,6 +66,9 @@ async def show_emojis(ctx):
     print(emoji_info_joined)
     response = emoji_info_joined
     await ctx.send(response)
+
+
+
 
 # @client.event
 # #event handler
