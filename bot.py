@@ -3,12 +3,13 @@
 #Stephanie Simpler
 #6-1-2020
 #Note: Dont forget to add back in responding to name 
-#Tried banner but it is 'emtpy' can't find setting for it in Discord
+#Tried banner but it is 'empty' can't find setting for it in Discord
 
 import os
 import discord
 from dotenv import load_dotenv
 from discord.ext import commands
+import random
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -29,7 +30,7 @@ async def on_ready():
         f'{guild.name}(id: {guild.id})'
         )
 
-@bot.command(name='channels', help='Lists all channels in this server')
+@bot.command(name='channels', help='Lists all channels in this server', aliases=['channel'])
 #"any command function must accept at least one parameter called ctx.. context.. holds data such as channel and guild the user called the command from"-RealPython
 async def list_channels(ctx):
     guild = discord.utils.get(bot.guilds, name=GUILD)
@@ -52,7 +53,7 @@ async def list_channels(ctx):
 
     await ctx.send(response)
 
-@bot.command(name='emojis', help='Shows all emojis for our server')
+@bot.command(name='emojis', help='Shows all emojis for our server', aliases=['emoji', 'emote', 'emotes'])
 async def show_emojis(ctx):
     print("showing emojis...")
     guild = discord.utils.get(bot.guilds, name=GUILD)
@@ -67,7 +68,16 @@ async def show_emojis(ctx):
     response = emoji_info_joined
     await ctx.send(response)
 
+#creating a roll command defining a Converter using function annotations - converts command arguments to int. Decided to add defaults too
+@bot.command(name='roll', help='Roll a dice. Type !roll <number_of_dice> <number_of_sides> or !roll for one six-sided die')
+async def roll_dice(ctx, number_of_dice: int = 1, number_of_sides: int = 6):
 
+    dice = [
+        str(random.choice(range(1, number_of_sides +1)))
+        for _ in range(number_of_dice)
+        ]
+    
+    await ctx.send(', '.join(dice))
 
 
 # @client.event
